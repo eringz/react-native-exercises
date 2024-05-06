@@ -1,94 +1,41 @@
-import React, {Component} from 'react';
-import {
-  Alert,
-  Platform,
-  StyleSheet,
-  Text,
-  TouchableHighlight,
-  TouchableOpacity,
-  TouchableNativeFeedback,
-  TouchableWithoutFeedback,
-  View,
-} from 'react-native';
+import * as React from 'react';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {Button, Text } from 'react-native';
 
-export default class Touchables extends Component {
-  _onPressButton() {
-    Alert.alert('you tapped the button;!');
-  }
+const Stack = createNativeStackNavigator();
 
-  _onLongPressButton() {
-    Alert.alert('You long-pressed the button!');
-  }
-
-  render() {
-    return(
-      <View>
-          <TouchableHighlight
-            onPress={this._onPressButton}
-            underlayColor='white'
-          >
-            <View style={styles.button}>
-              <Text style={styles.buttonText}>TouchableHighlight</Text>
-            </View>
-          </TouchableHighlight>
-          <TouchableOpacity
-            onPress={this._onPressButton}
-          >
-            <View style={styles.button}>
-              <Text style={styles.buttonText}>TouchableOpacity</Text>
-            </View>
-          </TouchableOpacity>
-          <TouchableNativeFeedback
-            onPress={this._onPressButton} 
-            background={
-              Platform.OS === 'android'
-                ? TouchableNativeFeedback.SelectableBackground()
-                : undefined
-            }
-          >
-            <View style={styles.button}>
-              <Text style={styles.buttonText}>
-                TouchableNativeFeedback{' '}
-                {Platform.OS !== 'android' ? '(Android only)' : ''}
-              </Text>
-            </View>
-          </TouchableNativeFeedback>
-          <TouchableWithoutFeedback
-            onPress={this._onPressButton}
-          >
-            <View style={styles.button}>
-              <Text style={styles.buttonText}>TouchableWithoutFeedback</Text>
-            </View>
-          </TouchableWithoutFeedback>
-          <TouchableHighlight
-            onPress={this._onPressButton}
-            onLongPress={this._onLongPressButton}
-            underlayColor='white'
-          >
-            <View style={styles.button}>
-              <Text style={styles.buttonText}>Touchable with long press</Text>
-            </View>
-          </TouchableHighlight>
-      </View>
-    )
-  }
+const HomeScreen = ({navigation}) => {
+  return(
+    <Button
+      title="Go to Jane's profile"
+      onPress={() =>
+      navigation.navigate('Profile', {name: 'Jane'})
+    }
+  />
+  )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingTop: 60,
-    alignItems: 'center',
-  },
-  button: {
-    marginBottom: 30,
-   
-    alignItems: 'center',
-    backgroundColor: '#2196F3',
-  },
-  buttonText: {
-    textAlign: 'center',
-    padding: 20,
-    color: 'white',
-  }
-})
+const ProfileScreen = ({navigation, route}) => {
+  return <Text style={{color: 'green'}}>This is {route.params.name} profile </Text>
+}
+
+const App = () => {
+  return(
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen 
+          name='Home'
+          component={HomeScreen}
+          options={{title: 'Welcome'}}
+        />
+        <Stack.Screen 
+          name='Profile'
+          component={ProfileScreen}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
+  )
+}
+
+export default App;``
