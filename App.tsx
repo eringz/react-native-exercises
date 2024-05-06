@@ -1,22 +1,31 @@
 import React, {useState} from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import type {PropsWithChildren} from 'react';
+import {View, TouchableOpacity, Text, StyleSheet} from 'react-native';
+import type { PropsWithChildren } from 'react';
 
-const FlexDirectionBasics = () => {
-  const [flexDirection, setflexDirection] = useState('column');
-
+const AlignItemsLayout = () => {
+  const [alignItems, setAlignItems] = useState('stretch');
   return(
     <PreviewLayout
-      label="flexDirection"
-      values={['column', 'row', 'row-reverse', 'column-reverse']}
-      selectedValue={flexDirection}
-      setSelectedValue={setflexDirection}
+      label='alignItems'
+      selectedValue={alignItems}
+      values={['stretch', 'flex-start', 'flex-end', 'center', 'baseline']}
+      setSelectedValue={setAlignItems}
     >
       <View style={[styles.box, {backgroundColor: 'powderblue'}]} />
       <View style={[styles.box, {backgroundColor: 'skyblue'}]} />
-      <View style={[styles.box, {backgroundColor: 'steelblue'}]} />
+      <View 
+        style={[
+          styles.box,
+          {
+            backgroundColor: 'steelblue',
+            width: 'auto',
+            minWidth: 50,
+          }
+        ]}
+      />
     </PreviewLayout>
   )
+
 }
 
 type PreviewLayoutProps = PropsWithChildren<{
@@ -32,20 +41,20 @@ const PreviewLayout = ({
   values,
   selectedValue,
   setSelectedValue,
-}: PreviewLayoutProps ) => (
+}: PreviewLayoutProps) => (
   <View style={{padding: 10, flex: 1}}>
     <Text style={styles.label}>{label}</Text>
-    <View style={styles.row} >
+    <View style={styles.row}>
       {values.map(value => (
         <TouchableOpacity
           key={value}
-          onPress={() => setSelectedValue(value)}
+          onPress={(() => setSelectedValue(value))}
           style={[styles.button, selectedValue === value && styles.selected]}
         >
           <Text
             style={[
               styles.buttonLabel,
-              selectedValue === value && styles.selectedLabel,
+              selectedValue === value && styles.selectedLabel
             ]}
           >
             {value}
@@ -62,6 +71,7 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: 8,
     backgroundColor: 'aliceblue',
+    minHeight: 200,
   },
   box: {
     width: 50,
@@ -101,4 +111,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default FlexDirectionBasics;
+export default AlignItemsLayout;
