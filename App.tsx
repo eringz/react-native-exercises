@@ -1,41 +1,51 @@
-import * as React from 'react';
-import {NavigationContainer} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {Button, Text } from 'react-native';
+import React, {useRef, useEffect} from 'react';
+import {Animated, Text, View} from 'react-native';
+import type {PropsWithChildren} from 'react';
+import type {ViewStyle} from 'react-native';
 
-const Stack = createNativeStackNavigator();
+type FadeInViewProps = PropsWithChildren<{style: ViewStyle}>;
 
-const HomeScreen = ({navigation}) => {
-  return(
-    <Button
-      title="Go to Jane's profile"
-      onPress={() =>
-      navigation.navigate('Profile', {name: 'Jane'})
-    }
-  />
-  )
-}
+const FadeInView: React.FC<FadeInViewProps> = props => {
+  const fadeAnim = useRef(new Animated.Value(0)).current; // Initial value for opacity: 0
 
-const ProfileScreen = ({navigation, route}) => {
-  return <Text style={{color: 'green'}}>This is {route.params.name} profile </Text>
-}
+  useEffect(() => {
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 10000,
+      useNativeDriver: true,
+    }).start();
+  }, [fadeAnim]);
 
-const App = () => {
-  return(
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen 
-          name='Home'
-          component={HomeScreen}
-          options={{title: 'Welcome'}}
-        />
-        <Stack.Screen 
-          name='Profile'
-          component={ProfileScreen}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
-  )
-}
+  return (
+    <Animated.View // Special animatable View
+      style={{
+        ...props.style,
+        opacity: fadeAnim, // Bind opacity to animated value
+      }}>
+      {props.children}
+    </Animated.View>
+  );
+};
 
-export default App;``
+// You can then use your `FadeInView` in place of a `View` in your components:
+export default () => {
+  return (
+    <View
+      style={{
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}>
+      <FadeInView
+        style={{
+          width: 250,
+          height: 50,
+          backgroundColor: 'powderblue',
+        }}>
+        <Text style={{fontSize: 28, textAlign: 'center', margin: 10}}>
+          Fading in
+        </Text>
+      </FadeInView>
+    </View>
+  );
+};
